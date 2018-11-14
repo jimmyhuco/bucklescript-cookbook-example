@@ -1,0 +1,1 @@
+let () = Printf.printf("Foo %d %s", 2, "bar");
