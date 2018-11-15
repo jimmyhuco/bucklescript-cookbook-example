@@ -1,7 +1,14 @@
 open Belt
-let painIndexMap = HashMap.String.make ~hintSize:10
+module StrHash =
+  Id.MakeHashable(struct
+                    type t = string
+                    let hash (x : t) = String.length x
+                    let eq (a : t) (b : t) = a = b
+                  end)
+let painIndexMap = HashMap.make ~hintSize:10 ~id:(module StrHash)
 let () =
-  let open HashMap.String in
+  let open HashMap in
+
     set painIndexMap "western paper wasp" 1.0;
     set painIndexMap "yellowjacket" 2.0;
     set painIndexMap "honey bee" 2.0;
@@ -10,7 +17,8 @@ let () =
     set painIndexMap "bullet ant" 4.0
 
 let () =
-  HashMap.String.set painIndexMap "bumble bee" 2.0
+  HashMap.set painIndexMap "bumble bee" 2.0
 
 let () =
-  painIndexMap |. HashMap.String.forEach (fun k  -> fun v  -> Js.log {j|key:$k, val:$v|j})
+  HashMap.forEach painIndexMap
+    (fun k  -> fun v  -> Js.log {j|key:$k, val:$v|j})

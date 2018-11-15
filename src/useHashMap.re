@@ -1,8 +1,16 @@
 open Belt;
 
-let painIndexMap = HashMap.String.make(~hintSize=10);
+module StrHash =
+  Id.MakeHashable({
+    type t = string;
+    let hash = (x: t) => String.length(x);
+    let eq = (a: t, b: t) => a == b;
+  });
+
+let painIndexMap = HashMap.make(~hintSize=10, ~id=(module StrHash));
+
 let () = {
-  open HashMap.String;
+  open HashMap;
   set(painIndexMap, "western paper wasp", 1.0);
   set(painIndexMap, "yellowjacket", 2.0);
   set(painIndexMap, "honey bee", 2.0);
@@ -11,9 +19,7 @@ let () = {
   set(painIndexMap, "bullet ant", 4.0);
 };
 
-let () = HashMap.String.set(painIndexMap, "bumble bee", 2.0);
+let () = HashMap.set(painIndexMap, "bumble bee", 2.0);
 
 let () =
-  painIndexMap->HashMap.String.forEach((k, v) =>
-    Js.log({j|key:$k, val:$v|j})
-  );
+  HashMap.forEach(painIndexMap, (k, v) => Js.log({j|key:$k, val:$v|j}));
