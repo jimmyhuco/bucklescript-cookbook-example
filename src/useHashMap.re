@@ -3,8 +3,8 @@ open Belt;
 module StrHash =
   Id.MakeHashable({
     type t = string;
-    let hash = (x: t) => String.length(x);
-    let eq = (a: t, b: t) => a == b;
+    let hash = String.length;
+    let eq = (==);
   });
 
 let painIndexMap = HashMap.make(~hintSize=10, ~id=(module StrHash));

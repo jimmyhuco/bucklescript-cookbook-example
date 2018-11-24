@@ -19,13 +19,16 @@ let timer =
 /*
  * Note that we *have* to return a new promise inside of the callback given to then_;
  */
-let _: Js.Promise.t(unit) =
-  Js.Promise.then_(value => Js.Promise.resolve(Js.log(value)), okPromise);
+let _: Js.Promise.t(string) =
+  Js.Promise.then_(value => Js.Promise.resolve(value), okPromise);
 
 /* Chaining */
 let _: Js.Promise.t(unit) =
   Js.Promise.then_(
-    value => Js.Promise.resolve(Js.log(value)),
+    value => {
+      Js.log(value);
+      Js.Promise.resolve();
+    },
     Js.Promise.then_(
       value => Js.Promise.resolve(value + 1),
       Js.Promise.resolve(1),
@@ -33,17 +36,20 @@ let _: Js.Promise.t(unit) =
   );
 
 /* Better with pipes 😉 */
-let _: Js.Promise.t(unit) =
+let _: Js.Promise.t(int) =
   Js.Promise.resolve(1)
   |> Js.Promise.then_(value => Js.Promise.resolve(value + 1))
-  |> Js.Promise.then_(value => Js.Promise.resolve(Js.log(value)));
+  |> Js.Promise.then_(value => Js.Promise.resolve(value));
 
 /* And even better with local open */
 let _: Js.Promise.t(unit) =
   Js.Promise.(
     resolve(1)
     |> then_(value => resolve(value + 1))
-    |> then_(value => resolve(Js.log(value)))
+    |> then_(value => {
+         Js.log(value);
+         resolve();
+       })
   );
 
 /* Waiting for two values */
